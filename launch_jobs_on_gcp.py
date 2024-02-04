@@ -3,7 +3,14 @@ from hydra.utils import instantiate
 from utils import TrainingInfo
 from omegaconf import DictConfig
 
+
+import os
+os.environ["HYDRA_FULL_ERROR"] = "1"
+
+
+
 from configs.config import setup_config
+
 
 setup_config()
 

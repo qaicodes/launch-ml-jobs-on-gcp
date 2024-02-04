@@ -27,7 +27,7 @@ class VMMetadataConfig:
     docker_image: str = SI("${docker_image}")
     zone: str = SI("${infrastructure.zone}")
     python_hash_seed: int = 42
-    mlflow_tracking_uri: str = SI("${infrastructure.mlflow_config.mlflow_internal_tracking_uri}")
+    mlflow_tracking_uri: str = SI("${infrastructure.mlflow.mlflow_internal_tracking_uri}")
     node_count: int = SI("${infrastructure.instance_group_creator.node_count}")
     disks: list[str] = SI("${..vm_config.disks}")
 
@@ -44,12 +44,12 @@ class InstanceTemplateCreatorConfig:
     )
     network: str = SI("https://www.googleapis.com/compute/v1/projects/${.project_id}/global/networks/default")
     subnetwork: str = SI(
-        "https://www.googleapis.com/compute/v1/projects/${.project_id}/regions/${infrastructure.region}/subnetworks/default"
+        "https://www.googleapis.com/compute/v1/projects/${.project_id}/regions/${infrastructure.zone}/subnetworks/default"
     )
     startup_script_path: str = "scripts/task_runner_startup_script.sh"
-    vm_config: VMConfig = VMConfig()
-    boot_disk_config: BootDiskConfig = BootDiskConfig()
-    vm_metadata_config: VMMetadataConfig = VMMetadataConfig()
+    vm_config: VMConfig = field(default_factory=lambda: VMConfig())
+    boot_disk_config: BootDiskConfig = field(default_factory=lambda: BootDiskConfig() )
+    vm_metadata_config: VMMetadataConfig = field(default_factory=lambda: VMMetadataConfig())
     template_name: str = SI("${infrastructure.instance_group_creator.name}")
     project_id: str = SI("${infrastructure.project_id}")
     labels: dict[str, str] = field(default_factory=lambda: {"project": "cybulde"})
